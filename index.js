@@ -30,6 +30,11 @@ const run = async () => {
       res.send(result);
     });
 
+    app.get("/roommate", async (req, res) => {
+      const result = await roommateColl.find().toArray();
+      res.send(result);
+    });
+
     
     await client.db("admin").command({ ping: 1 });
     console.log(
