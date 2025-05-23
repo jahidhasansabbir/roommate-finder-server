@@ -34,7 +34,13 @@ const run = async () => {
       const result = await roommateColl.find().toArray();
       res.send(result);
     });
-
+    
+    app.get("/home", async(req, res)=>{
+      const query = {availability: "available"}
+      const result = await roommateColl.find(query).limit(6).toArray();
+      res.send(result);
+    })
+    
     app.get("/details/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
