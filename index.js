@@ -1,13 +1,13 @@
 const express = require("express");
 const cors = require("cors");
-require('dotenv').config();
+require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-const uri =`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ythsg28.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ythsg28.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -18,7 +18,6 @@ const client = new MongoClient(uri, {
 
 const run = async () => {
   try {
-    await client.connect();
     const database = client.db("roommatedb");
     const roommateColl = database.collection("roommate");
 
@@ -31,13 +30,13 @@ const run = async () => {
       const result = await roommateColl.find().toArray();
       res.send(result);
     });
-    
-    app.get("/home", async(req, res)=>{
-      const query = {availability: "available"}
+
+    app.get("/home", async (req, res) => {
+      const query = { availability: "available" };
       const result = await roommateColl.find(query).limit(6).toArray();
       res.send(result);
-    })
-    
+    });
+
     app.get("/details/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -54,7 +53,7 @@ const run = async () => {
         lifeStyle,
         availability,
         description,
-        contact
+        contact,
       } = req.body;
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -67,36 +66,32 @@ const run = async () => {
           lifeStyle,
           availability,
           description,
-          contact
-        }
+          contact,
+        },
       };
       const result = await roommateColl.updateOne(query, update);
-      res.send(result)
+      res.send(result);
     });
 
-    app.patch("/count/:id", async(req, res)=>{
-      const {count} = req.body;
+    app.patch("/count/:id", async (req, res) => {
+      const { count } = req.body;
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const update = {
-        $set:{
-          count
-        }
+        $set: {
+          count,
+        },
       };
       const result = await roommateColl.updateOne(query, update);
-      res.send(result)
-    })
+      res.send(result);
+    });
 
-    app.delete("/delete/:id", async(req, res)=>{
+    app.delete("/delete/:id", async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)};
+      const query = { _id: new ObjectId(id) };
       const result = await roommateColl.deleteOne(query);
-      res.send(result)
-    })
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+      res.send(result);
+    });
   } finally {
   }
 };
