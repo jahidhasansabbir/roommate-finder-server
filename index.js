@@ -27,8 +27,8 @@ const run = async () => {
     });
 
     app.get("/roommate", async (req, res) => {
-      const result = await roommateColl.find().toArray();
-      res.send(result);
+      const result = await roommateColl.find().sort({ rentAmount: 1 }).toArray();
+    res.send(result);
     });
 
     app.get("/home", async (req, res) => {
